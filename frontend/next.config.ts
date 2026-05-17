@@ -2,14 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:8080/api/:path*',
-      },
-    ];
-  },
+  output: "export",
+  basePath: "/github-wrapped-ai",
+  images: { unoptimized: true },
 };
 
 export default nextConfig;
