@@ -255,7 +255,7 @@ export default function WrappedApp() {
     }, 1500);
 
     try {
-      const res = await fetch('https://github-wrapped-backend-965448970103.us-central1.run.app/api/generate', {
+      const res = await fetch('http://localhost:8080/api/generate', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: url.split('/').pop()?.trim() || url }),
