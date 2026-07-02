@@ -72,7 +72,7 @@ const SectionHeading = ({ title, subtitle }: { title: string, subtitle: string }
 
 // --- Sections ---
 
-const HeroSection = ({ url, setUrl, fetchWrapped, loading }: any) => {
+const HeroSection = ({ url, setUrl, fetchWrapped, loading, error }: any) => {
   return (
     <section className="relative pt-32 pb-20 px-6 flex flex-col items-center justify-center min-h-screen text-center overflow-hidden">
       <div className="z-10 max-w-4xl mx-auto">
@@ -90,6 +90,7 @@ const HeroSection = ({ url, setUrl, fetchWrapped, loading }: any) => {
             Transform your coding journey into a cinematic AI experience.
           </p>
         </motion.div>
+
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -122,6 +123,16 @@ const HeroSection = ({ url, setUrl, fetchWrapped, loading }: any) => {
             </button>
           </div>
         </motion.div>
+
+        {error && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6 text-red-500 text-sm font-semibold bg-red-500/10 border border-red-500/20 px-6 py-3 rounded-2xl inline-block max-w-xl"
+          >
+            ⚠️ {error}
+          </motion.div>
+        )}
       </div>
 
       {/* Floating Elements */}
@@ -234,6 +245,7 @@ export default function WrappedApp() {
   const [loadingStatus, setLoadingStatus] = useState("Initializing AI...");
   const [data, setData] = useState<any>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   const loadingSteps = [
     "Connecting to GitHub...",
@@ -247,6 +259,7 @@ export default function WrappedApp() {
   const fetchWrapped = async () => {
     if (!url) return;
     setLoading(true);
+    setError(null);
     
     let step = 0;
     const interval = setInterval(() => {
@@ -268,27 +281,7 @@ export default function WrappedApp() {
       window.scrollTo(0, 0);
     } catch (e: any) {
       console.error(e);
-      // Fallback to demo data so the project always shows something cool
-      setData({
-        career_stats: { total_repos: 15, followers: 215000, strongest_language: "C" },
-        ai_personality: { title: "The Kernel God", description: "You don't just write code; you invent the tools that everyone else uses to write code. Uncompromising, brilliant, and legendary." },
-        career_aura: ["Legendary", "Low-Level", "Architect"],
-        skill_radar: [
-          { skill_category: "Frontend", score_out_of_100: 95 },
-          { skill_category: "Backend", score_out_of_100: 88 },
-          { skill_category: "AI/ML", score_out_of_100: 82 },
-          { skill_category: "DevOps", score_out_of_100: 75 },
-          { skill_category: "Design", score_out_of_100: 90 }
-        ],
-        career_timeline: [
-          { year: "2023", event: "Mastered Modern Web Architecture" },
-          { year: "2024", event: "Scaled AI-Powered Systems" },
-          { year: "2025", event: "Leading Technical Innovation" }
-        ],
-        suggested_next_moves: ["Open Source Advocacy", "System Design Mentorship"],
-        roast_or_boast: "Your LinkedIn profile has more hits than a summer blockbuster. Leave some jobs for the rest of us!"
-      });
-      setCurrentSlide(0);
+      setError(e.message || "An unexpected error occurred.");
     } finally {
       clearInterval(interval);
       setLoading(false);
@@ -366,6 +359,7 @@ export default function WrappedApp() {
             setUrl={setUrl} 
             fetchWrapped={fetchWrapped} 
             loading={loading} 
+            error={error}
           />
           <HowItWorks />
           <Features />

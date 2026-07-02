@@ -81,22 +81,7 @@ async function fetchGitHubData(username: string): Promise<ProfileData> {
 
   } catch (err: any) {
     console.error("[Scraper] Error:", err.message);
-    
-    // Fallback to demo data if rate limit fails so the app always looks cool
-    console.warn("Using high-quality mock GitHub data for demo.");
-    return {
-      login: "torvalds",
-      name: "Linus Torvalds",
-      bio: "The creator of Linux and Git.",
-      public_repos: 15,
-      followers: 215000,
-      created_at: "2011-09-03T15:26:22Z",
-      top_language: "C",
-      recent_repos: [
-        { name: "linux", description: "Linux kernel source tree", stars: 175000 },
-        { name: "git", description: "The stupid content tracker", stars: 40000 }
-      ]
-    };
+    throw new Error(err.message || "Failed to fetch GitHub data.");
   }
 }
 
